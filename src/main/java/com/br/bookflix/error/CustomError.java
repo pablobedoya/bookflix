@@ -29,7 +29,7 @@ public class CustomError {
 	
 	@JsonProperty(index = 2)
 	@ApiModelProperty(value = "HTTP Status code da requisição", name = "status", dataType = "long", example = "500")
-	private int status;
+	private HttpStatus status;
 	
 	@JsonProperty(index = 3)
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
@@ -39,9 +39,9 @@ public class CustomError {
 	public CustomError(final HttpStatus status, final Exception ex, final String error) {
         super();
         loadDetails(ex);
-        this.status = status.value();
+        this.status = status;
     }
-    
+	
     private void loadDetails(Exception ex) {
     	errorMessage = ex.getMessage();
     	

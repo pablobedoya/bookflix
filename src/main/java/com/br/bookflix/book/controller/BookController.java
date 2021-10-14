@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.br.bookflix.book.Book;
-import com.br.bookflix.book.service.BookService;
 import com.br.bookflix.exception.BookflixException;
+import com.br.bookflix.published.service.PublishedService;
+import com.br.bookflix.unpublished.Unpublished;
+import com.br.bookflix.unpublished.service.UnpublishedService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,42 +28,48 @@ import io.swagger.annotations.ApiParam;
 public class BookController {
 	
 	@Autowired
-	private BookModelAssembler assembler;
+	private PublishedModelAssembler publishedAssembler;
 	
 	@Autowired
-	private BookService bookService;
+	private UnpublishedModelAssembler unpublishedAssembler;
+	
+	@Autowired
+	private PublishedService publishedService;
+	
+	@Autowired
+	private UnpublishedService unpublishedService;
 
 	// ----------------------------------------------------
 	// Read
 	// ----------------------------------------------------
-	@ApiOperation(value = "Listagem de livros", response = Book.class, responseContainer = "List",
+	@ApiOperation(value = "Listagem de livros", response = Unpublished.class, responseContainer = "List",
 			notes="Esse endpoint é responsável por buscar um ou mais livros no Bookflix que atendam aos filtros de pesquisa.")
 	@RequestMapping(method = RequestMethod.GET)
-	public CollectionModel<EntityModel<Book>> findAll() throws BookflixException {
+	public CollectionModel<EntityModel<Unpublished>> findAll() throws BookflixException {
 
-		List<Book> books = bookService.findAll();
-		return assembler.toCollectionModel(books);
+		List<Unpublished> books = unpublishedService.findAll();
+		return unpublishedAssembler.toCollectionModel(books);
 	}
 
-	@ApiOperation(value = "Busca livro de acordo com seu id", response = Book.class, notes="Esse endpoint é responsável por buscar um livro no Bookflix através do seu id.")
+	@ApiOperation(value = "Busca livro de acordo com seu id", response = Unpublished.class, notes="Esse endpoint é responsável por buscar um livro no Bookflix através do seu id.")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public EntityModel<Book> findOne(
+	public EntityModel<Unpublished> findOne(
 		@ApiParam(name = "id", value = "Id") @PathVariable Long id) throws BookflixException {
 
-		Book book = bookService.findOne(id);
+		Unpublished book = unpublishedService.findOne(id);
 		
-		return assembler.toModel(book);
+		return unpublishedAssembler.toModel(book);
 	}
 
 	// ----------------------------------------------------
 	// Persist
 	// ----------------------------------------------------
-	@ApiOperation(value = "Cria um livro", response = Book.class, notes="Esse endpoint é responsável pela criação um novo livro no Bookflix.")
+	@ApiOperation(value = "Cria um livro", response = Unpublished.class, notes="Esse endpoint é responsável pela criação um novo livro no Bookflix.")
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<?> create(
-		@ApiParam(name = "book", value = "Book data in JSON format") @RequestBody Book book) throws BookflixException {
+		@ApiParam(name = "book", value = "Book data in JSON format") @RequestBody Unpublished book) throws BookflixException {
 
-		EntityModel<Book> entityModel = assembler.toModel(bookService.save(book));
+		EntityModel<Unpublished> entityModel = unpublishedAssembler.toModel(unpublishedService.save(book));
 
 		return ResponseEntity
 				.created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
@@ -75,21 +82,21 @@ public class BookController {
 	@ApiOperation(value = "Remove um livro", notes="Esse endpoint é responsável pela remoção de um livro no Bookflix.")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> delete(@ApiParam(name = "id", value = "Id") @PathVariable Long id) throws BookflixException {
-		bookService.delete(id);
+		unpublishedService.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 	
 	// ----------------------------------------------------
 	// Update
 	// ----------------------------------------------------
-	@ApiOperation(value = "Atualiza o livro", response = Book.class, notes="Esse endpoint é responsável pela atualização dos dados de um livro no Bookflix.")
+	@ApiOperation(value = "Atualiza o livro", response = Unpublished.class, notes="Esse endpoint é responsável pela atualização dos dados de um livro no Bookflix.")
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public EntityModel<Book> update(
-		@ApiParam(name = "book", value = "Informações do livro em formato JSON") @RequestBody Book book,
+	public EntityModel<Unpublished> update(
+		@ApiParam(name = "book", value = "Informações do livro em formato JSON") @RequestBody Unpublished book,
 		@ApiParam(name = "id", value = "Id") @PathVariable Long id) throws BookflixException {
-		book = bookService.update(book, id);
+		book = unpublishedService.update(book, id);
 		
-		return assembler.toModel(book);
+		return unpublishedAssembler.toModel(book);
 	}
 	
 }

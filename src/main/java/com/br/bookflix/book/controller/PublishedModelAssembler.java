@@ -11,21 +11,16 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
-import com.br.bookflix.book.Book;
 import com.br.bookflix.exception.BookflixException;
+import com.br.bookflix.published.Published;
 
 @Component
-public class BookModelAssembler implements RepresentationModelAssembler<Book, EntityModel<Book>> {
+public class PublishedModelAssembler implements RepresentationModelAssembler<Published, EntityModel<Published>> {
 
 	@Override
-	public EntityModel<Book> toModel(Book book) {
+	public EntityModel<Published> toModel(Published book) {
 		try {
 			List<Link> links = new ArrayList<>();
-			if(book.getId() != null) {
-				links.add(linkTo(methodOn(BookController.class).findOne(book.getId())).withSelfRel());
-				links.add(linkTo(methodOn(BookController.class).update(book, book.getId())).withSelfRel());
-				links.add(linkTo(methodOn(BookController.class).delete(book.getId())).withSelfRel());
-			}
 			links.add(linkTo(methodOn(BookController.class).findAll()).withRel("find-all"));
 			
 			return EntityModel.of(book, links);

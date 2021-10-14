@@ -18,8 +18,6 @@ public interface AbstractCrud<T> {
 	// ----------------------------------------------------
 	public T save(T entity) throws BookflixException;
 	
-	public List<T> saveAll(List<T> entities) throws BookflixException;
-	
 	public T update(T entity, Long id) throws BookflixException;
 	
 	// ----------------------------------------------------
