@@ -22,7 +22,7 @@ import com.br.bookflix.utils.Constants;
 import com.br.bookflix.utils.TestUtils;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = BookflixApplication.class, properties = {"spring.config.name=publishedDb","bookflix.trx.datasource.url=jdbc:h2:mem:publishedDb"})
+@SpringBootTest(classes = BookflixApplication.class, properties = {"spring.config.name=userDb","bookflix.trx.datasource.url=jdbc:h2:mem:userDb"})
 @DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 public class UserServiceTest {
 	

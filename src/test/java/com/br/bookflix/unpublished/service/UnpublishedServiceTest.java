@@ -18,7 +18,7 @@ import com.br.bookflix.utils.Constants;
 import com.br.bookflix.utils.TestUtils;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = BookflixApplication.class, properties = {"spring.config.name=publishedDb","bookflix.trx.datasource.url=jdbc:h2:mem:publishedDb"})
+@SpringBootTest(classes = BookflixApplication.class, properties = {"spring.config.name=unpublishedDb","bookflix.trx.datasource.url=jdbc:h2:mem:unpublishedDb"})
 @DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 public class UnpublishedServiceTest {
 	

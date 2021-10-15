@@ -3,6 +3,7 @@ package com.br.bookflix.utils;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
@@ -102,7 +103,7 @@ public class TestUtils {
 		user.setFirstName(RandomStringUtils.randomAlphabetic(1, 254));
 		user.setLastName(RandomStringUtils.randomAlphabetic(1, 254));
 		user.setCpf(RandomStringUtils.randomAlphabetic(1, 14));
-		user.setEmail("teste@gmail.com");
+		user.setEmail(RandomStringUtils.randomAlphabetic(1, 14) + "@gmail.com");
 		user.setDateOfBirth(LocalDate.now());
 		user.setPassword(RandomStringUtils.randomAlphabetic(1, 254));
 		
@@ -141,6 +142,23 @@ public class TestUtils {
 	
 	private static int generateRandomInt(int min, int max) {
 		return (int) ((Math.random() * (max - min)) + min);
+	}
+	
+	public static boolean set(Object object, String fieldName, Object fieldValue) {
+	    Class<?> clazz = object.getClass();
+	    while (clazz != null) {
+	        try {
+	            Field field = clazz.getDeclaredField(fieldName);
+	            field.setAccessible(true);
+	            field.set(object, fieldValue);
+	            return true;
+	        } catch (NoSuchFieldException e) {
+	            clazz = clazz.getSuperclass();
+	        } catch (Exception e) {
+	            throw new IllegalStateException(e);
+	        }
+	    }
+	    return false;
 	}
 	
 }
