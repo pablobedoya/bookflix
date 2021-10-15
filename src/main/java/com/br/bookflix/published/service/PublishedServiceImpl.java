@@ -149,11 +149,11 @@ public class PublishedServiceImpl implements PublishedService {
 		}
 	}
 	
-	public Book findByIsbn10(String isbn10) {
+	public Published findByIsbn10(String isbn10) {
 		return repository.findByIsbn10(isbn10);
 	}
 	
-	public Book findByIsbn13(String isbn3) {
+	public Published findByIsbn13(String isbn3) {
 		return repository.findByIsbn13(isbn3);
 	}
 	

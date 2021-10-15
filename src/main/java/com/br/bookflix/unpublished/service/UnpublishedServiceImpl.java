@@ -1,6 +1,7 @@
 package com.br.bookflix.unpublished.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,8 @@ import com.br.bookflix.book.service.BookService;
 import com.br.bookflix.exception.BookflixException;
 import com.br.bookflix.exception.InternalServerError;
 import com.br.bookflix.exception.ResourceNotFoundException;
+import com.br.bookflix.published.Published;
+import com.br.bookflix.published.service.PublishedService;
 import com.br.bookflix.unpublished.Unpublished;
 import com.br.bookflix.unpublished.repository.UnpublishedRepository;
 import com.br.bookflix.utils.ValidationUtils;
@@ -23,6 +26,9 @@ public class UnpublishedServiceImpl implements UnpublishedService {
 	
 	@Autowired
 	private BookService bookService;
+	
+	@Autowired
+	private PublishedService publishedService;
 
 	// ----------------------------------------------------
 	// Read
@@ -70,13 +76,45 @@ public class UnpublishedServiceImpl implements UnpublishedService {
 		try {
 			validate(book);
 			book.setCreatedDate(LocalDateTime.now());
-			book.setFile(new byte[] {});
+			book.setFile(new byte[] {}); // TODO remove mocked value
+			processRelatedBooks(book);
 			return repository.save(book);
 		} catch (BookflixException e) {
 			throw e;
 		} catch (Exception e) {
 			throw new InternalServerError("Could not save book", e.getMessage());
 		}
+	}
+	
+	private void processRelatedBooks(Unpublished book) throws BookflixException {
+		List<Published> relatedBooks = new ArrayList<>();
+		Published entity = null;
+		Published entityFromDb = null;
+		
+		for(Published published : relatedBooks) {
+			if(published.getIsbn10() != null && !published.getIsbn10().isEmpty()) {
+				entityFromDb = publishedService.findByIsbn10(published.getIsbn10());
+			}
+			
+			if(entityFromDb != null) {
+				relatedBooks.add(entityFromDb);
+				continue;
+			}
+			
+			if(published.getIsbn13() != null && !published.getIsbn13().isEmpty()) {
+				entityFromDb = publishedService.findByIsbn13(published.getIsbn13());
+			}
+			
+			if(entityFromDb != null) {
+				relatedBooks.add(entityFromDb);
+				continue;
+			}
+			
+			entity = publishedService.save(published);
+			relatedBooks.add(entity);
+		}
+		
+		book.setRelatedBooks(relatedBooks);
 	}
 	
 	@Override
