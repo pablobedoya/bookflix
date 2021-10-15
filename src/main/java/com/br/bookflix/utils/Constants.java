@@ -18,6 +18,7 @@ public class Constants {
 	public static final String INVALID_VALUES = "Invalid values";
 	public static final String NEGATIVE_VALUE = "%s can not be negative";
 	public static final String STRING_GREATER = "%s can not be greater than %s characters";
+	public static final String NUMBER_GREATER = "%s can not be greater than %s";
 	
 	// ----------------------------------------------------
 	// State

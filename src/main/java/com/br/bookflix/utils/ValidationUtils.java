@@ -49,6 +49,12 @@ public class ValidationUtils {
 		}
 	}
 	
+	public static void checkIfIsGreater(int number, int limit, String label) throws BookflixException {
+		if(number > limit) {
+			throw new BookflixException(Constants.INVALID_VALUES, String.format(Constants.NUMBER_GREATER, label, limit), HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 	public static void isEmailValid(final String email, String label) throws BookflixException {
 		Pattern pattern = Pattern.compile(EMAIL_PATTERN);
 		Matcher matcher = pattern.matcher(email);

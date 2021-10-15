@@ -1,6 +1,7 @@
 package com.br.bookflix.published.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +28,7 @@ public class PublishedServiceImpl implements PublishedService {
 	
 	@Autowired
 	private BookService bookService;
-
+	
 	// ----------------------------------------------------
 	// Read
 	// ----------------------------------------------------
@@ -65,6 +66,8 @@ public class PublishedServiceImpl implements PublishedService {
 		try {
 			validate(book);
 			return repository.save(book);
+		} catch (BookflixException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new BookflixException("Could not save book", e);
 		}
@@ -124,7 +127,7 @@ public class PublishedServiceImpl implements PublishedService {
 		
 		// ISBN13
 		if(book.getIsbn13() != null) {
-			bookFromDb = findByIsbn10(book.getIsbn13());
+			bookFromDb = findByIsbn13(book.getIsbn13());
 			if(bookFromDb != null) {
 				throw new BookflixException(Constants.INVALID_VALUES, "ISBN13 already in use", HttpStatus.BAD_REQUEST);
 			}
@@ -135,11 +138,11 @@ public class PublishedServiceImpl implements PublishedService {
 		// publication year
 		if(book.getPublicationYear() != null) {
 			ValidationUtils.checkIfNegative(BigDecimal.valueOf(book.getPublicationYear()), "Book publication year");
+			ValidationUtils.checkIfIsGreater(book.getPublicationYear(), LocalDate.now().getYear(), "Book publication year");
 		}
 		
 		// pages
 		if(book.getPages() != null) {
-			ValidationUtils.checkIfEmpty(book.getPages(), "Book pages");
 			ValidationUtils.checkIfExceeds(book.getPages(), 50, "Book pages");
 		}
 	}
