@@ -25,7 +25,7 @@ public class LoginServiceImpl implements LoginService {
 				return user;
 			}
 			throw new UnauthorizedException("Wrong credentials", "Incorrect email or password");
-		} catch (UnauthorizedException e) {
+		} catch (BookflixException e) {
 			throw e;
 		} catch (Exception e) {
 			throw new InternalServerError("Unexpected error", e.getMessage());
