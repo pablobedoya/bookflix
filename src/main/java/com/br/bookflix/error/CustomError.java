@@ -20,20 +20,20 @@ import lombok.Data;
 public class CustomError {
 	
 	@JsonProperty(index = 0, value="error_message")
-	@ApiModelProperty(value = "Descrição do erro ou exception", name = "error_message", dataType = "String", example = "Erro inesperado")
+	@ApiModelProperty(value = "Error message", name = "error_message", dataType = "String", example = "Unexpected error")
 	private String errorMessage;
 	
 	@JsonProperty(index = 1, value="error_details")
-	@ApiModelProperty(value = "Mensagem de erro obtida na exceção", name = "error_details", dataType = "String", example = "Null Pointer exception")
+	@ApiModelProperty(value = "Error details", name = "error_details", dataType = "String", example = "Something unexpected happened while processing the request")
 	private String errorDetails;
 	
 	@JsonProperty(index = 2)
-	@ApiModelProperty(value = "HTTP Status code da requisição", name = "status", dataType = "long", example = "500")
+	@ApiModelProperty(value = "Status code", name = "status", dataType = "long", example = "INTERNAL_SERVER_ERROR")
 	private HttpStatus status;
 	
 	@JsonProperty(index = 3)
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
-	@ApiModelProperty(value = "Horário da requisição", name = "timestamp", dataType = "String", example = "2021-09-21T17:32:28Z")
+	@ApiModelProperty(value = "Request date", name = "timestamp", dataType = "String", example = "2021-09-21T17:32:28Z")
     private LocalDateTime timestamp;
 	
 	public CustomError(final HttpStatus status, final Exception ex, final String error) {

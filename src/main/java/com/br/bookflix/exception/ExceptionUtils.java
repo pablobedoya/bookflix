@@ -12,6 +12,8 @@ public class ExceptionUtils {
 			message = ((DataIntegrityViolationException) exception).getMostSpecificCause().getMessage();
 		} else if(exception instanceof UnexpectedRollbackException) {
 			message = ((UnexpectedRollbackException) exception).getMostSpecificCause().getMessage();
+		} else if(exception instanceof DataIntegrityViolationException) {
+			message = ((BookflixException) exception).getDetails();
 		} else {
 			message = exception.getMessage();
 		}

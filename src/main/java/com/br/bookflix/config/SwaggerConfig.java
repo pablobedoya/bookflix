@@ -57,56 +57,37 @@ public class SwaggerConfig {
 			.apiInfo(apiInfo());
 	}
 	
-	private List<ResponseMessage> responseMessage(RequestMethod method, String type, boolean requiresAuthentication)
-	{
-	    return new ArrayList<ResponseMessage>() {
+	private List<ResponseMessage> responseMessage(RequestMethod method, String type, boolean requiresAuthentication) {
+		return new ArrayList<ResponseMessage>() {
 			private static final long serialVersionUID = 1L;
-		{
-			if(RequestMethod.DELETE.equals(method)) {
-				add(getError204(type));	
-			} else {
-				add(getError201(type));
+			{
+				if (RequestMethod.DELETE.equals(method))
+					add(getError204(type));
+
+				add(getError401());
+
+				if (requiresAuthentication)
+					add(getError403());
+
+				add(getError404());
+				add(getError412());
+				add(getError422());
+				add(getError500());
 			}
-	        add(getError400());
-	        add(getError401());
-	        if(requiresAuthentication) {
-	        	add(getError403());
-	        }
-	        add(getError404());
-	        add(getError408());
-	        add(getError429());
-	        add(getError500());
-	        add(getError503());
-	    }};
-	}
-	
-	private ResponseMessage getError201(String type) {
-		return new ResponseMessageBuilder()
-            .code(201)
-            .message("Busca realizada com sucesso")
-            .responseModel(new ModelRef(type))
-            .build();
+		};
 	}
 	
 	private ResponseMessage getError204(String type) {
 		return new ResponseMessageBuilder()
             .code(204)
-            .message("Item excluído com sucesso")
-            .build();
-	}
-	
-	private ResponseMessage getError400() {
-		return new ResponseMessageBuilder()
-            .code(400)
-            .message("A requisição não pôde processada pelo servidor devido a um erro no cliente.")
-            .responseModel(new ModelRef("CustomError"))
+            .message("No Content")
             .build();
 	}
 	
 	private ResponseMessage getError401() {
 		return new ResponseMessageBuilder()
             .code(401)
-            .message("Usuário não autenticado para realizar a operação.")
+            .message("Unauthorized")
             .responseModel(new ModelRef("CustomError"))
             .build();
 	}
@@ -114,7 +95,7 @@ public class SwaggerConfig {
 	private ResponseMessage getError403() {
 		return new ResponseMessageBuilder()
             .code(403)
-            .message("Usuário não possui permissão para realizar a operação.")
+            .message("Forbidden")
             .responseModel(new ModelRef("CustomError"))
             .build();
 	}
@@ -122,23 +103,23 @@ public class SwaggerConfig {
 	private ResponseMessage getError404() {
 		return new ResponseMessageBuilder()
             .code(404)
-            .message("Recurso não encontrado.")
+            .message("Not Found")
             .responseModel(new ModelRef("CustomError"))
             .build();
 	}
 	
-	private ResponseMessage getError408() {
+	private ResponseMessage getError412() {
 		return new ResponseMessageBuilder()
-            .code(408)
-            .message("Tempo excedido.")
+            .code(412)
+            .message("Precondition Failed")
             .responseModel(new ModelRef("CustomError"))
             .build();
 	}
 	
-	private ResponseMessage getError429() {
+	private ResponseMessage getError422() {
 		return new ResponseMessageBuilder()
-            .code(429)
-            .message("Usuário submeteu muitas requisições em um intervalo de tempo.")
+            .code(422)
+            .message("Unprocessable Entity")
             .responseModel(new ModelRef("CustomError"))
             .build();
 	}
@@ -146,15 +127,7 @@ public class SwaggerConfig {
 	private ResponseMessage getError500() {
 		return new ResponseMessageBuilder()
             .code(500)
-            .message("Serviço indisponível.")
-            .responseModel(new ModelRef("CustomError"))
-            .build();
-	}
-	
-	private ResponseMessage getError503() {
-		return new ResponseMessageBuilder()
-            .code(503)
-            .message("Erro inesperado.")
+            .message("Internal Server Error")
             .responseModel(new ModelRef("CustomError"))
             .build();
 	}
@@ -187,7 +160,7 @@ public class SwaggerConfig {
 	private ApiInfo apiInfo() {
 	    return new ApiInfo(
 	      "API Bookflix", 
-	      "Esta API é responsável por autenticar usuários, funcionários e criar livros.", 
+	      "This API is responsible for authenticating users, employees and creating books.", 
 	      "1.0.0", null, new Contact("Equipe 1", null, "equipe1@g.unicamp.br"), 
 	      null, null, Collections.emptyList());
 	}

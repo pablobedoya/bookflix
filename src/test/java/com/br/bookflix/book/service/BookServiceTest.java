@@ -50,7 +50,7 @@ public class BookServiceTest {
 			publishedService.save(book);
 		});
 		
-		TestUtils.assertBookflixException(thrown, Constants.INVALID_VALUES,  String.format(Constants.STRING_GREATER, "Book title", 500));
+		TestUtils.assertBookflixException(thrown, Constants.INVALID_VALUES, String.format(Constants.STRING_GREATER, "Book title", 500));
 	}
 	
 	@Test
