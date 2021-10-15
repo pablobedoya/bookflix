@@ -3,6 +3,7 @@ package com.br.bookflix.book.service;
 import org.springframework.stereotype.Service;
 
 import com.br.bookflix.book.Book;
+import com.br.bookflix.exception.BookflixException;
 import com.br.bookflix.exception.PreconditionFailedException;
 import com.br.bookflix.utils.Constants;
 import com.br.bookflix.utils.ValidationUtils;
@@ -11,7 +12,7 @@ import com.br.bookflix.utils.ValidationUtils;
 public class BookServiceImpl implements BookService {
 	
 	@Override
-	public void validate(Book book) throws PreconditionFailedException {
+	public void validate(Book book) throws BookflixException {
 		// Title
 		ValidationUtils.checkIfEmpty(book.getTitle(), "Book title");
 		ValidationUtils.checkIfExceeds(book.getTitle(), 500, "Book title");

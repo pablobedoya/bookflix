@@ -52,7 +52,7 @@ public class BookController {
 	
 	@ApiOperation(value = "List of books by genre", response = Unpublished.class, responseContainer = "List",
 			notes="This endpoint is responsible to find books by genre")
-	@RequestMapping(value = "/{genre}", method = RequestMethod.GET)
+	@RequestMapping(value = "/genre/{genre}", method = RequestMethod.GET)
 	public CollectionModel<EntityModel<Unpublished>> findByGenre(
 		@ApiParam(name = "genre", value = "Genre") @PathVariable String genre) throws BookflixException {
 
