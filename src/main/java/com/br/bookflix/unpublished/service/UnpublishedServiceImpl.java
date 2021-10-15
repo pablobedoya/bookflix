@@ -5,11 +5,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.br.bookflix.book.service.BookService;
 import com.br.bookflix.exception.BookflixException;
+import com.br.bookflix.exception.InternalServerError;
+import com.br.bookflix.exception.ResourceNotFoundException;
 import com.br.bookflix.unpublished.Unpublished;
 import com.br.bookflix.unpublished.repository.UnpublishedRepository;
 
@@ -34,29 +35,29 @@ public class UnpublishedServiceImpl implements UnpublishedService {
 				return book.get();
 			}
 			
-			throw new BookflixException("Entity not found", "Could not retrieve book with id " + id, HttpStatus.NOT_FOUND);
-		} catch (BookflixException e) {
+			throw new ResourceNotFoundException("Entity not found", "Could not retrieve book with id " + id);
+		} catch (ResourceNotFoundException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new BookflixException("Error retrieving book with id " + id, e);
+			throw new InternalServerError("Error retrieving book with id " + id, e.getMessage());
 		}
 	}
 	
 	@Override
-	public List<Unpublished> findAll() throws BookflixException {
+	public List<Unpublished> findAll() throws InternalServerError {
 		try {
 			return repository.findAll();
 		} catch (Exception e) {
-			throw new BookflixException("Could not retrieve books" + e.getMessage(), e);
+			throw new InternalServerError("Could not retrieve books", e.getMessage());
 		}
 	}
 	
 	@Override
-	public List<Unpublished> findByGenre(String genre) throws BookflixException {
+	public List<Unpublished> findByGenre(String genre) throws InternalServerError {
 		try {
 			return repository.findByGenre(genre);
 		} catch (Exception e) {
-			throw new BookflixException("Could not retrieve books" + e.getMessage(), e);
+			throw new InternalServerError("Could not retrieve books", e.getMessage());
 		}
 	}
 	
@@ -64,28 +65,24 @@ public class UnpublishedServiceImpl implements UnpublishedService {
 	// Persist
 	// ----------------------------------------------------
 	@Override
-	public Unpublished save(Unpublished book) throws BookflixException {
+	public Unpublished save(Unpublished book) throws InternalServerError {
 		try {
 			validate(book);
 			book.setCreatedDate(LocalDateTime.now());
 			book.setFile(new byte[] {});
 			return repository.save(book);
-		} catch (BookflixException e) {
-			throw e;
 		} catch (Exception e) {
-			throw new BookflixException("Could not save book", e);
+			throw new InternalServerError("Could not save book", e.getMessage());
 		}
 	}
 	
 	@Override
-	public Unpublished update(Unpublished book, Long id) throws BookflixException {
+	public Unpublished update(Unpublished book, Long id) throws InternalServerError {
 		try {
 			findOne(id);
 			return save(book);
-		} catch (BookflixException e) {
-			throw e;
 		} catch (Exception e) {
-			throw new BookflixException("Could not update book with id " + id, e);
+			throw new InternalServerError("Could not update book with id " + id, e.getMessage());
 		}
 	}
 	
@@ -93,14 +90,12 @@ public class UnpublishedServiceImpl implements UnpublishedService {
 	// Delete
 	// ----------------------------------------------------
 	@Override
-	public void delete(Long id) throws BookflixException {
+	public void delete(Long id) throws InternalServerError {
 		try {
 			Unpublished book = findOne(id);
 			repository.delete(book);
-		} catch (BookflixException e) {
-			throw e;
 		} catch (Exception e) {
-			throw new BookflixException("Could not delete book with id " + id, e);
+			throw new InternalServerError("Could not delete book with id " + id, e.getMessage());
 		}
 	}
 	

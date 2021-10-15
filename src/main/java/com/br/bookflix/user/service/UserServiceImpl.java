@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.br.bookflix.exception.BookflixException;
+import com.br.bookflix.exception.InternalServerError;
+import com.br.bookflix.exception.PreconditionFailedException;
+import com.br.bookflix.exception.ResourceNotFoundException;
+import com.br.bookflix.exception.UnprocessableEntityException;
 import com.br.bookflix.user.User;
 import com.br.bookflix.user.repository.UserRepository;
 import com.br.bookflix.utils.ValidationUtils;
@@ -29,21 +32,20 @@ public class UserServiceImpl implements UserService {
 			if (user.isPresent()) {
 				return user.get();
 			}
-			throw new BookflixException("Entity not found", "Could not retrieve user with id " + id,
-					HttpStatus.NOT_FOUND);
-		} catch (BookflixException e) {
+			throw new ResourceNotFoundException("Entity not found", "Could not retrieve user with id " + id);
+		} catch (ResourceNotFoundException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new BookflixException("Error retrieving user with id " + id, e);
+			throw new InternalServerError("Error retrieving user with id " + id, e.getMessage());
 		}
 	}
 
 	@Override
-	public List<User> findAll() throws BookflixException {
+	public List<User> findAll() throws InternalServerError {
 		try {
 			return repository.findAll();
 		} catch (Exception e) {
-			throw new BookflixException("Could not retrieve books" + e.getMessage(), e);
+			throw new InternalServerError("Could not retrieve books", e.getMessage());
 		}
 	}
 
@@ -54,27 +56,25 @@ public class UserServiceImpl implements UserService {
 	public User save(User user) throws BookflixException {
 		try {
 			User testUser = repository.getByEmail(user.getEmail());
-			if(testUser == null) {
+			if (testUser == null) {
 				validate(user);
 				return repository.save(user);
 			}
-			throw new BookflixException("Entity not created", "The email " + user.getEmail() + " is already registered", HttpStatus.ALREADY_REPORTED);
-		} catch (BookflixException e) {
-			throw e; 
+			throw new UnprocessableEntityException("Entity not created", "The email " + user.getEmail() + " is already registered");
+		} catch (UnprocessableEntityException e) {
+			throw e;
 		} catch (Exception e) {
-			throw new BookflixException("Could not save user", e);
+			throw new InternalServerError("Could not save user", e.getMessage());
 		}
 	}
 
 	@Override
-	public User update(User user, Long id) throws BookflixException {
+	public User update(User user, Long id) throws InternalServerError {
 		try {
 			findOne(id);
 			return save(user);
-		} catch (BookflixException e) {
-			throw e;
 		} catch (Exception e) {
-			throw new BookflixException("Could not update user with id" + id, e);
+			throw new InternalServerError("Could not update user with id " + id, e.getMessage());
 		}
 	}
 
@@ -82,14 +82,12 @@ public class UserServiceImpl implements UserService {
 	// Delete
 	// ----------------------------------------------------
 	@Override
-	public void delete(Long id) throws BookflixException {
+	public void delete(Long id) throws InternalServerError {
 		try {
 			User user = findOne(id);
 			repository.delete(user);
-		} catch (BookflixException e) {
-			throw e;
 		} catch (Exception e) {
-			throw new BookflixException("Could not delete user by id" + id, e);
+			throw new InternalServerError("Could not delete user by id " + id, e.getMessage());
 		}
 
 	}
@@ -98,7 +96,7 @@ public class UserServiceImpl implements UserService {
 	// Validation
 	// ----------------------------------------------------
 	@Override
-	public void validate(User user) throws BookflixException {
+	public void validate(User user) throws PreconditionFailedException {
 		// First name
 		ValidationUtils.checkIfEmpty(user.getFirstName(), "First Name");
 		ValidationUtils.checkIfExceeds(user.getFirstName(), 255, "First Name");

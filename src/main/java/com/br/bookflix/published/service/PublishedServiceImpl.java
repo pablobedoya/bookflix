@@ -7,12 +7,14 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.br.bookflix.book.Book;
 import com.br.bookflix.book.service.BookService;
 import com.br.bookflix.exception.BookflixException;
+import com.br.bookflix.exception.InternalServerError;
+import com.br.bookflix.exception.ResourceNotFoundException;
+import com.br.bookflix.exception.UnprocessableEntityException;
 import com.br.bookflix.published.Published;
 import com.br.bookflix.published.repository.PublishedRepository;
 import com.br.bookflix.utils.Constants;
@@ -40,20 +42,20 @@ public class PublishedServiceImpl implements PublishedService {
 				return book.get();
 			}
 			
-			throw new BookflixException("Entity not found", "Could not retrieve book with id " + id, HttpStatus.NOT_FOUND);
-		} catch (BookflixException e) {
+			throw new ResourceNotFoundException("Entity not found", "Could not retrieve book with id " + id);
+		} catch (ResourceNotFoundException e) {
 			throw e;
 		} catch (Exception e) {
-			throw new BookflixException("Error retrieving book with id " + id, e);
+			throw new InternalServerError("Error retrieving book with id " + id, e.getMessage());
 		}
 	}
 	
 	@Override
-	public List<Published> findAll() throws BookflixException {
+	public List<Published> findAll() throws InternalServerError {
 		try {
 			return repository.findAll();
 		} catch (Exception e) {
-			throw new BookflixException("Could not retrieve books" + e.getMessage(), e);
+			throw new InternalServerError("Could not retrieve books", e.getMessage());
 		}
 	}
 	
@@ -61,24 +63,22 @@ public class PublishedServiceImpl implements PublishedService {
 	// Persist
 	// ----------------------------------------------------
 	@Override
-	public Published save(Published book) throws BookflixException {
+	public Published save(Published book) throws InternalServerError {
 		try {
 			validate(book);
 			return repository.save(book);
 		} catch (Exception e) {
-			throw new BookflixException("Could not save book", e);
+			throw new InternalServerError("Could not save book", e.getMessage());
 		}
 	}
 	
 	@Override
-	public Published update(Published book, Long id) throws BookflixException {
+	public Published update(Published book, Long id) throws InternalServerError {
 		try {
 			findOne(id);
 			return save(book);
-		} catch (BookflixException e) {
-			throw e;
 		} catch (Exception e) {
-			throw new BookflixException("Could not update book with id " + id, e);
+			throw new InternalServerError("Could not update book with id " + id, e.getMessage());
 		}
 	}
 	
@@ -86,14 +86,12 @@ public class PublishedServiceImpl implements PublishedService {
 	// Delete
 	// ----------------------------------------------------
 	@Override
-	public void delete(Long id) throws BookflixException {
+	public void delete(Long id) throws InternalServerError {
 		try {
 			Published book = findOne(id);
 			repository.delete(book);
-		} catch (BookflixException e) {
-			throw e;
 		} catch (Exception e) {
-			throw new BookflixException("Could not delete book with id " + id, e);
+			throw new InternalServerError("Could not delete book with id " + id, e.getMessage());
 		}
 	}
 	
@@ -109,14 +107,14 @@ public class PublishedServiceImpl implements PublishedService {
 		
 		// ISBN10 or ISB13
 		if((book.getIsbn13() == null || book.getIsbn13().isEmpty()) && (book.getIsbn10() == null || book.getIsbn10().isEmpty())) {
-			throw new BookflixException(Constants.INVALID_VALUES, String.format(Constants.EMPTY_VALUE, "Book ISBN10 or ISBN13"), HttpStatus.BAD_REQUEST);
+			throw new UnprocessableEntityException(Constants.INVALID_VALUES, String.format(Constants.EMPTY_VALUE, "Book ISBN10 or ISBN13"));
 		}
 		
 		// ISBN13
 		if(book.getIsbn10() != null) {
 			bookFromDb = findByIsbn10(book.getIsbn10());
 			if(bookFromDb != null) {
-				throw new BookflixException(Constants.INVALID_VALUES, "ISBN10 already in use", HttpStatus.BAD_REQUEST);
+				throw new UnprocessableEntityException(Constants.INVALID_VALUES, "ISBN10 already in use");
 			}
 			ValidationUtils.checkIfEmpty(book.getIsbn10(), "Book ISBN10");
 			ValidationUtils.checkIfExceeds(book.getIsbn10(), 10, "Book ISBN10");
@@ -126,7 +124,7 @@ public class PublishedServiceImpl implements PublishedService {
 		if(book.getIsbn13() != null) {
 			bookFromDb = findByIsbn10(book.getIsbn13());
 			if(bookFromDb != null) {
-				throw new BookflixException(Constants.INVALID_VALUES, "ISBN13 already in use", HttpStatus.BAD_REQUEST);
+				throw new UnprocessableEntityException(Constants.INVALID_VALUES, "ISBN13 already in use");
 			}
 			ValidationUtils.checkIfEmpty(book.getIsbn13(), "Book ISBN13");
 			ValidationUtils.checkIfExceeds(book.getIsbn13(), 13, "Book ISBN13");
