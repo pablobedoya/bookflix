@@ -3,6 +3,8 @@ package com.br.bookflix.user.service;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -129,6 +131,19 @@ public class UserServiceTest {
 		});
 		
 		TestUtils.assertBookflixException(thrown, Constants.INVALID_VALUES, String.format(Constants.EMAIL_ERROR, user.getEmail()));
+	}
+	
+	@Test
+	@DisplayName("Test if an user with date of birth in future is persisted")
+	public void persistUserWithDateInFuture() throws BookflixException {
+		User user = TestUtils.getUser();
+		user.setDateOfBirth(LocalDate.now().plusDays(10));
+		
+		BookflixException thrown = assertThrows(BookflixException.class, () -> {
+			userService.save(user);
+		});
+		
+		TestUtils.assertBookflixException(thrown, Constants.INVALID_VALUES, String.format(Constants.DATE_ERROR, "Date of birthday", "future"));
 	}
 	
 	@Test
