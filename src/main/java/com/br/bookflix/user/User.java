@@ -7,11 +7,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-@Data
+
 @Entity
+@Table(name = "user")
+@Data
 public class User {
 	
 	/**
@@ -62,6 +66,7 @@ public class User {
 	 * <br/>
 	 * Required with max length 255.
 	 */
+	@ApiModelProperty(hidden = true)
 	@Column(nullable = false, length = 255)
 	private String password;
 
