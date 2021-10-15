@@ -2,8 +2,6 @@ package com.br.bookflix.user.service;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
 import com.br.bookflix.crud.AbstractCrud;
 import com.br.bookflix.exception.BookflixException;
 import com.br.bookflix.user.User;

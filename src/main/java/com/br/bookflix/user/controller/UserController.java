@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.br.bookflix.exception.BookflixException;
@@ -23,7 +22,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@Api(value = "User", tags = { "User" }, description = "Realiza as operações referentes aos usuários.")
+@Api(value = "User", tags = { "User" }, description = "Performs operations in users.")
 @RequestMapping("/users")
 public class UserController {
 
@@ -36,7 +35,7 @@ public class UserController {
 	// ----------------------------------------------------
 	// Read
 	// ----------------------------------------------------
-	@ApiOperation(value = "Listagem de usuários", response = User.class, responseContainer = "List", notes = "Esse endpoint é responsável por buscar um ou mais usuarios no Bookflix.")
+	@ApiOperation(value = "List of users", response = User.class, responseContainer = "List", notes = "This endpoint is reponsible to find one or more users in Bookflix.")
 	@RequestMapping(method = RequestMethod.GET)
 	public CollectionModel<EntityModel<User>> findAll() throws BookflixException {
 
@@ -45,7 +44,7 @@ public class UserController {
 
 	}
 
-	@ApiOperation(value = "Busca usuário pelo id", response = User.class, notes = "Esse endpoint é responsável por buscar um usuário através do seu id.")
+	@ApiOperation(value = "List user by id", response = User.class, notes = "This endpoint is responsible to find a user by it's id..")
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public EntityModel<User> findOne(@ApiParam(name = "id", value = "Id") @PathVariable Long id)
 			throws BookflixException {
@@ -59,7 +58,7 @@ public class UserController {
 	// Persist
 	// ----------------------------------------------------
 
-	@ApiOperation(value = "Cria um usuário", response = User.class, notes = "Esse endpoint é responsável pela criação de um novo usuário no Bookflix.")
+	@ApiOperation(value = "Creates a user", response = User.class, notes = "This endpoint is responsible to create a user in Bookflix..")
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<?> create(
 			@ApiParam(name = "user", value = "User info in JSON format") @RequestBody User user)
@@ -74,7 +73,7 @@ public class UserController {
 	// Delete
 	// ----------------------------------------------------
 
-	@ApiOperation(value = "Remove um usuário", notes = "Esse endpoint é responsável pela remoção de um livro no Bookflix.")
+	@ApiOperation(value = "Deletes a user", notes = "This endpoint is responsible to delete a user in Bookflix.")
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> delete(@ApiParam(name = "id", value = "Id") @PathVariable Long id)
 			throws BookflixException {
@@ -85,10 +84,10 @@ public class UserController {
 	// ----------------------------------------------------
 	// Update
 	// ----------------------------------------------------
-	@ApiOperation(value = "Atualiza o usuário", response = User.class, notes = "Esse endpoint é responsável por atualizar as informações de um usuário no Bookflix.")
+	@ApiOperation(value = "Updates a user", response = User.class, notes = "This endpoint is responsible to update a user in Bookflix.")
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public EntityModel<User> update(
-			@ApiParam(name = "user", value = "Informações do usuário em formato JSON") @RequestBody User user,
+			@ApiParam(name = "user", value = "User info in JSON format") @RequestBody User user,
 			@ApiParam(name = "id", value = "Id") @PathVariable Long id) throws BookflixException {
 		user = userService.update(user, id);
 		
