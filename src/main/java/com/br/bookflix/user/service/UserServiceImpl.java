@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.br.bookflix.exception.BookflixException;
 import com.br.bookflix.exception.InternalServerError;
-import com.br.bookflix.exception.PreconditionFailedException;
 import com.br.bookflix.exception.ResourceNotFoundException;
 import com.br.bookflix.exception.UnprocessableEntityException;
 import com.br.bookflix.user.User;
@@ -33,7 +32,7 @@ public class UserServiceImpl implements UserService {
 				return user.get();
 			}
 			throw new ResourceNotFoundException("Entity not found", "Could not retrieve user with id " + id);
-		} catch (ResourceNotFoundException e) {
+		} catch (BookflixException e) {
 			throw e;
 		} catch (Exception e) {
 			throw new InternalServerError("Error retrieving user with id " + id, e.getMessage());
@@ -61,7 +60,7 @@ public class UserServiceImpl implements UserService {
 				return repository.save(user);
 			}
 			throw new UnprocessableEntityException("Entity not created", "The email " + user.getEmail() + " is already registered");
-		} catch (UnprocessableEntityException e) {
+		} catch (BookflixException e) {
 			throw e;
 		} catch (Exception e) {
 			throw new InternalServerError("Could not save user", e.getMessage());
@@ -69,10 +68,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User update(User user, Long id) throws InternalServerError {
+	public User update(User user, Long id) throws BookflixException {
 		try {
 			findOne(id);
 			return save(user);
+		} catch (BookflixException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new InternalServerError("Could not update user with id " + id, e.getMessage());
 		}
@@ -82,10 +83,12 @@ public class UserServiceImpl implements UserService {
 	// Delete
 	// ----------------------------------------------------
 	@Override
-	public void delete(Long id) throws InternalServerError {
+	public void delete(Long id) throws BookflixException {
 		try {
 			User user = findOne(id);
 			repository.delete(user);
+		} catch (BookflixException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new InternalServerError("Could not delete user by id " + id, e.getMessage());
 		}
@@ -96,7 +99,7 @@ public class UserServiceImpl implements UserService {
 	// Validation
 	// ----------------------------------------------------
 	@Override
-	public void validate(User user) throws PreconditionFailedException {
+	public void validate(User user) throws BookflixException {
 		// First name
 		ValidationUtils.checkIfEmpty(user.getFirstName(), "First Name");
 		ValidationUtils.checkIfExceeds(user.getFirstName(), 255, "First Name");
@@ -116,7 +119,6 @@ public class UserServiceImpl implements UserService {
 		// Password
 		ValidationUtils.checkIfEmpty(user.getPassword(), "Password");
 		ValidationUtils.checkIfExceeds(user.getPassword(), 255, "Password");
-
 	}
 
 }
