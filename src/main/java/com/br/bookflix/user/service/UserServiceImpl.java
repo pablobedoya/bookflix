@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.br.bookflix.exception.BookflixException;
@@ -20,6 +21,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository repository;
+
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 
 	// ----------------------------------------------------
 	// Read
@@ -58,6 +62,7 @@ public class UserServiceImpl implements UserService {
 			User testUser = repository.getByEmail(user.getEmail());
 			if (testUser == null) {
 				validate(user);
+				user.setPassword(passwordEncoder.encode(user.getPassword()));
 				return repository.save(user);
 			}
 			throw new UnprocessableEntityException("Entity not created", "The email " + user.getEmail() + " is already registered");
