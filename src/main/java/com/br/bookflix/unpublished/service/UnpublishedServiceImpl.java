@@ -13,6 +13,7 @@ import com.br.bookflix.exception.InternalServerError;
 import com.br.bookflix.exception.ResourceNotFoundException;
 import com.br.bookflix.unpublished.Unpublished;
 import com.br.bookflix.unpublished.repository.UnpublishedRepository;
+import com.br.bookflix.utils.ValidationUtils;
 
 @Service
 public class UnpublishedServiceImpl implements UnpublishedService {
@@ -112,6 +113,12 @@ public class UnpublishedServiceImpl implements UnpublishedService {
 	public void validate(Unpublished book) throws BookflixException {
 		// validate book common attributes
 		bookService.validate(book);
+		
+		// File
+		ValidationUtils.checkIfEmpty(book.getFile(), "Book attachment");
+		
+		// Creator
+		ValidationUtils.checkIfEmpty(book.getUploadedBy(), "Book creator");
 	}
 
 }

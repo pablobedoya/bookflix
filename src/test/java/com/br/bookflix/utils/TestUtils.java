@@ -17,6 +17,8 @@ import com.br.bookflix.error.CustomError;
 import com.br.bookflix.exception.BookflixException;
 import com.br.bookflix.published.Published;
 import com.br.bookflix.subject.Subject;
+import com.br.bookflix.unpublished.Unpublished;
+import com.br.bookflix.user.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
@@ -78,6 +80,33 @@ public class TestUtils {
 		book.setPages(RandomStringUtils.randomAlphabetic(1, 49));
 		
 		return book;
+	}
+	
+	public static Unpublished getUnpublished() {
+		Unpublished book = new Unpublished();
+		book.setTitle(RandomStringUtils.randomAlphabetic(1, 499));
+		book.setDescription(RandomStringUtils.randomAlphabetic(1, 499));
+		book.setThumbnail(new byte[] {});
+		book.setGenre(RandomStringUtils.randomAlphabetic(1, 99));
+		book.setSubjects(getSubjects());
+		book.setAuthors(getAuthors());
+		book.setFile(new byte[] {});
+		// related books
+		// uploaded by
+		
+		return book;
+	}
+	
+	public static User getUser() {
+		User user = new User();
+		user.setFirstName(RandomStringUtils.randomAlphabetic(1, 254));
+		user.setLastName(RandomStringUtils.randomAlphabetic(1, 254));
+		user.setCpf(RandomStringUtils.randomAlphabetic(1, 14));
+		user.setEmail("teste@gmail.com");
+		user.setDateOfBirth(LocalDate.now());
+		user.setPassword(RandomStringUtils.randomAlphabetic(1, 254));
+		
+		return user;
 	}
 	
 	private static Set<Subject> getSubjects() {

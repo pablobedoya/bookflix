@@ -106,8 +106,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void validate(User user) throws BookflixException {
 		// First name
-		ValidationUtils.checkIfEmpty(user.getFirstName(), "First Name");
-		ValidationUtils.checkIfExceeds(user.getFirstName(), 255, "First Name");
+		ValidationUtils.checkIfEmpty(user.getFirstName(), "First name");
+		ValidationUtils.checkIfExceeds(user.getFirstName(), 255, "First name");
+		
+		// Last name
+		ValidationUtils.checkIfExceeds(user.getLastName(), 255, "Last name");
 
 		// CPF
 		ValidationUtils.checkIfEmpty(user.getCpf(), "CPF");
@@ -119,7 +122,7 @@ public class UserServiceImpl implements UserService {
 		ValidationUtils.isEmailValid(user.getEmail(), "Email");
 
 		// Date of Birthday
-		ValidationUtils.checkIfDateIsInPast(user.getDateOfBirth(), "Date of Birthday");
+		ValidationUtils.checkIfDateIsInPast(user.getDateOfBirth(), "Date of birthday");
 
 		// Password
 		ValidationUtils.checkIfEmpty(user.getPassword(), "Password");

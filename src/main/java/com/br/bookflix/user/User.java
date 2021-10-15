@@ -58,7 +58,7 @@ public class User {
 	/**
 	 * User date of birth.
 	 */
-	@Column(name = "date_of_birth", nullable = false)
+	@Column(name = "date_of_birth")
 	private LocalDate dateOfBirth;
 	
 	/**
