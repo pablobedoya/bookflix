@@ -31,11 +31,11 @@ spring.datasource.url=jdbc:mysql://localhost:3306/bookflix
 spring.datasource.username={root}
 spring.datasource.password={root}
 ~~~
-2. Na pasta raiz do projeto rode o comando 
+4. Na pasta raiz do projeto rode o comando 
 ~~~
 mvn clean install
 ~~~
-3. Rode o projeto utilizando o comando:
+5. Rode o projeto utilizando o comando:
 ~~~
 mvn spring-boot:run
 ~~~
