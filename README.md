@@ -9,9 +9,9 @@
 
 ## Proposta
 
-> Com a atual revolução digital, muitas pessoas abandonaram o hábito da leitura recreativa, que sempre foi uma das melhores amigas dos estressados, preocupados e aflitos, pois sempre serviu de refúgio dos problemas do cotidiano. <br>
-> BookFlix é uma plataforma para centralizar as publicações de autores já consagrados e também de novos autores, de forma a fornecer um catálogo de diversos gêneros literários, contemplando também trabalhos de autores amadores, que podem ser reconhecidos e incentivados pelos leitores. <br>
-> É importante salientar que o BookFlix tem a principal missão de estimular a leitura saudável dentre as pessoas, de forma que a contribuir com o bem estar da sociedade em geral. <br>
+Com a atual revolução digital, muitas pessoas abandonaram o hábito da leitura recreativa, que sempre foi uma das melhores amigas dos estressados, preocupados e aflitos, pois sempre serviu de refúgio dos problemas do cotidiano. <br>
+BookFlix é uma plataforma para centralizar as publicações de autores já consagrados e também de novos autores, de forma a fornecer um catálogo de diversos gêneros literários, contemplando também trabalhos de autores amadores, que podem ser reconhecidos e incentivados pelos leitores. <br>
+É importante salientar que o BookFlix tem a principal missão de estimular a leitura saudável dentre as pessoas, de forma que a contribuir com o bem estar da sociedade em geral. <br>
 
 ## Steps to run
 0. Pre-requisitos:
@@ -39,3 +39,24 @@ mvn clean install
 ~~~
 mvn spring-boot:run
 ~~~
+
+## Documentação
+
+Swagger para as APIs expostas podem ser encontradas, após rodar o projeto, na página:
+
+~~~
+http://127.0.0.1:8080/swagger-ui.html
+~~~
+
+## Links interassantes:
+1. Publicação da revista Galileu sobre os benefícios da leitura:
+- obs: Links dos estudos podem ser encontrados na própria pagina da publicação.
+~~~
+https://revistagalileu.globo.com/Ciencia/noticia/2016/12/7-provas-de-que-ler-faz-bem-para-sua-saude.html
+~~~
+
+2. OpenLibrary API DOC:
+~~~
+https://openlibrary.org/developers/api
+~~~
+
